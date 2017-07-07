@@ -1,5 +1,5 @@
 !
-       SUBROUTINE gmh_on(xguess,per,incin,ldin,inspots,tin,latin,nrot,
+       SUBROUTINE gmh_on(xguess,per,fcz,incin,ldin,inspots,tin,latin,nrot,
      .                lonin,ssin,fcin,fmod,tmod,update_test)
 
 
@@ -22,7 +22,7 @@
      .       lntm,sstm,fctm 
        REAL(8), DIMENSION(N) ::  lat,lon,ss,fc,rb
        REAL(8), DIMENSION(N) :: lonintm,ssintm,fcintm,latintm
-     
+       REAL(8), DIMENSION(3) :: fcz
        INTEGER inspots(9),nsptm(9)
 
        REAL(8), DIMENSION(ndata) :: fmod,tmod,ch2,xguess
@@ -139,7 +139,7 @@ c@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
  !!!      inc=int(r*89)*2.-89.
  !      inc=int(r*60)*2.-60.
 
-        inc=int(r*40)*2.
+        inc=int(r*48)*2.
  !!!      inc=int(r*50)*2.-42.
 
 !       print*,'in:',r,inc
@@ -154,7 +154,7 @@ c@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
      
        IF (inc.eq.incin) GO TO 11
  
-       call BDsignal(cntrl,inc,tin,ldin,per,nspots,lonin,
+       call BDsignal(cntrl,inc,tin,ldin,per,fcz,nspots,lonin,
      .         latin,ssin,fc,Fmod,tmod)
 
        IF (cntrl.eq.1) GO TO 11
@@ -203,7 +203,7 @@ c@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
      
        IF (ld.eq.ldin) GO TO 10
  
-       call BDsignal(cntrl,incin,tin,ld,per,nspots,lonin,
+       call BDsignal(cntrl,incin,tin,ld,per,fcz,nspots,lonin,
      .         latin,ssin,fc,Fmod,tmod)
 
        IF (cntrl.eq.1) GO TO 10
@@ -337,7 +337,7 @@ c@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 !now that we fixed the number of spots and their properties we check the signal 
 
-       call BDsignal(cntrl,incin,tin,ldin,per,nsptm,lntm,lttm,
+       call BDsignal(cntrl,incin,tin,ldin,per,fcz,nsptm,lntm,lttm,
      .               sstm,fctm,Fmod,tmod)
 
        IF (cntrl.eq.1) GO TO 22
@@ -414,7 +414,7 @@ c@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
        lntm((rot_test-1)*N+1)=lon(1)
 
 
-       call BDsignal(cntrl,incin,tin,ldin,per,nspots,lntm,lttm,
+       call BDsignal(cntrl,incin,tin,ldin,per,fcz,nspots,lntm,lttm,
      .               ssin,fcin,Fmod,tmod)
 
        IF (cntrl.eq.1) GO TO 331
@@ -477,7 +477,7 @@ c@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
        sstm((rot_test-1)*N+1)=ss(1)
 
-       call BDsignal(cntrl,incin,tin,ldin,per,nspots,lonin,
+       call BDsignal(cntrl,incin,tin,ldin,per,fcz,nspots,lonin,
      .         latin,sstm,fcin,Fmod,tmod)
 
 
@@ -548,7 +548,7 @@ c call a random number-> if qjump>ran accept if not retry
        IF (fc(1).eq.fcintm(1)) GO TO 551
        fctm((rot_test-1)*N+1)=fc(1)
 
-       call BDsignal(cntrl,incin,tin,ldin,per,nspots,lonin,
+       call BDsignal(cntrl,incin,tin,ldin,per,fcz,nspots,lonin,
      .         latin,ssin,fctm,Fmod,tmod)
 
 
@@ -619,7 +619,7 @@ c call a random number-> if qjump>ran accept if not retry
        lntm((rot_test-1)*N+2)=lon(2)
 
 
-       call BDsignal(cntrl,incin,tin,ldin,per,nspots,lntm,lttm,
+       call BDsignal(cntrl,incin,tin,ldin,per,fcz,nspots,lntm,lttm,
      .               ssin,fcin,Fmod,tmod)
 
 
@@ -682,7 +682,7 @@ c call a random number-> if qjump>ran accept if not retry
 
        sstm((rot_test-1)*N+2)=ss(2)
 
-       call BDsignal(cntrl,incin,tin,ldin,per,nspots,lonin,
+       call BDsignal(cntrl,incin,tin,ldin,per,fcz,nspots,lonin,
      .         latin,sstm,fcin,Fmod,tmod)
 
 
@@ -746,7 +746,7 @@ c call a random number-> if qjump>ran accept if not retry
 
        fctm((rot_test-1)*N+2)=fc(2)
 
-       call BDsignal(cntrl,incin,tin,ldin,per,nspots,lonin,
+       call BDsignal(cntrl,incin,tin,ldin,per,fcz,nspots,lonin,
      .         latin,ssin,fctm,Fmod,tmod)
 
 
@@ -812,7 +812,7 @@ c call a random number-> if qjump>ran accept if not retry
        lntm((rot_test-1)*N+3)=lon(3)
 
 
-       call BDsignal(cntrl,incin,tin,ldin,per,nspots,lntm,lttm,
+       call BDsignal(cntrl,incin,tin,ldin,per,fcz,nspots,lntm,lttm,
      .               ssin,fcin,Fmod,tmod)
 
 
@@ -875,7 +875,7 @@ c call a random number-> if qjump>ran accept if not retry
  
        sstm((rot_test-1)*N+3)=ss(3)
 
-       call BDsignal(cntrl,incin,tin,ldin,per,nspots,lonin,
+       call BDsignal(cntrl,incin,tin,ldin,per,fcz,nspots,lonin,
      .         latin,sstm,fcin,Fmod,tmod)
 
 
@@ -940,7 +940,7 @@ c call a random number-> if qjump>ran accept if not retry
 
        fctm((rot_test-1)*N+3)=fc(3)
 
-       call BDsignal(cntrl,incin,tin,ldin,per,nspots,lonin,
+       call BDsignal(cntrl,incin,tin,ldin,per,fcz,nspots,lonin,
      .         latin,ssin,fctm,Fmod,tmod)
 
 
@@ -1006,7 +1006,7 @@ c call a random number-> if qjump>ran accept if not retry
        lntm((rot_test-1)*N+4)=lon(4)
 
 
-       call BDsignal(cntrl,incin,tin,ldin,per,nspots,lntm,lttm,
+       call BDsignal(cntrl,incin,tin,ldin,per,fcz,nspots,lntm,lttm,
      .               ssin,fcin,Fmod,tmod)
 
 
@@ -1068,7 +1068,7 @@ c call a random number-> if qjump>ran accept if not retry
  
        sstm((rot_test-1)*N+4)=ss(4)
 
-       call BDsignal(cntrl,incin,tin,ldin,per,nspots,lonin,
+       call BDsignal(cntrl,incin,tin,ldin,per,fcz,nspots,lonin,
      .         latin,sstm,fcin,Fmod,tmod)
 
 
@@ -1130,7 +1130,7 @@ c call a random number-> if qjump>ran accept if not retry
        IF (fc(4).eq.fcintm(4)) GO TO 554
 
        fctm((rot_test-1)*N+4)=fc(4)
-       call BDsignal(cntrl,incin,tin,ldin,per,nspots,lonin,
+       call BDsignal(cntrl,incin,tin,ldin,per,fcz,nspots,lonin,
      .         latin,ssin,fctm,Fmod,tmod)
 
 
@@ -1193,7 +1193,7 @@ c call a random number-> if qjump>ran accept if not retry
        lttm((rot_test-1)*N+5)=lat(5)
        lntm((rot_test-1)*N+5)=lon(5)
 
-       call BDsignal(cntrl,incin,tin,ldin,per,nspots,lntm,lttm,
+       call BDsignal(cntrl,incin,tin,ldin,per,fcz,nspots,lntm,lttm,
      .               ssin,fcin,Fmod,tmod)
 
 
@@ -1255,7 +1255,7 @@ c call a random number-> if qjump>ran accept if not retry
  
        sstm((rot_test-1)*N+5)=ss(5)
 
-       call BDsignal(cntrl,incin,tin,ldin,per,nspots,lonin,
+       call BDsignal(cntrl,incin,tin,ldin,per,fcz,nspots,lonin,
      .         latin,sstm,fcin,Fmod,tmod)
 
 
@@ -1318,7 +1318,7 @@ c call a random number-> if qjump>ran accept if not retry
 
        fctm((rot_test-1)*N+5)=fc(5)
 
-       call BDsignal(cntrl,incin,tin,ldin,per,nspots,lonin,
+       call BDsignal(cntrl,incin,tin,ldin,per,fcz,nspots,lonin,
      .         latin,ssin,fctm,Fmod,tmod)
 
 
@@ -1382,7 +1382,7 @@ c call a random number-> if qjump>ran accept if not retry
        lntm((rot_test-1)*N+6)=lon(6)
 
 
-       call BDsignal(cntrl,incin,tin,ldin,per,nspots,lntm,lttm,
+       call BDsignal(cntrl,incin,tin,ldin,per,fcz,nspots,lntm,lttm,
      .               ssin,fcin,Fmod,tmod)
 
 
@@ -1444,7 +1444,7 @@ c call a random number-> if qjump>ran accept if not retry
  
        sstm((rot_test-1)*N+6)=ss(6)
 
-       call BDsignal(cntrl,incin,tin,ldin,per,nspots,lonin,
+       call BDsignal(cntrl,incin,tin,ldin,per,fcz,nspots,lonin,
      .         latin,sstm,fcin,Fmod,tmod)
 
 
@@ -1507,7 +1507,7 @@ c call a random number-> if qjump>ran accept if not retry
 
        fctm((rot_test-1)*N+6)=fc(6)
 
-       call BDsignal(cntrl,incin,tin,ldin,per,nspots,lonin,
+       call BDsignal(cntrl,incin,tin,ldin,per,fcz,nspots,lonin,
      .         latin,ssin,fctm,Fmod,tmod)
 
 
