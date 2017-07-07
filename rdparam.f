@@ -1,6 +1,6 @@
 c subroutine to read in the first guess parameters for the MCMC 
 
-       SUBROUTINE rdparam(fmeas,Nmax,inc,per,ld,nspots,lon,lat,
+       SUBROUTINE rdparam(fmeas,Nmax,inc,per,fcz,ld,nspots,lon,lat,
      .                   ss,fc,outpt)!Irotsym,Crotsym)
 
 
@@ -10,7 +10,7 @@ c subroutine to read in the first guess parameters for the MCMC
        INTEGER nspots(9),i,Nmax,j
 
        DOUBLE PRECISION inc,per,Irotsym,Crotsym,ld
-
+       REAL(8), DIMENSION(3) :: fcz
        DOUBLE PRECISION lat(1:N*9),lon(1:N*9),ss(1:N*9),
      .               fc(1:N*9)
        CHARACTER header*46, fmeas*80,outpt*80
@@ -30,38 +30,35 @@ c subroutine to read in the first guess parameters for the MCMC
        READ(9,*) 
 
 
-       READ(9,*) fmeas              !file with observations to compare with
+       READ(9,*) fmeas              
 
-       READ(9,*) outpt        !fileaname where output will be written
+       READ(9,*) outpt        
    
-       READ(9,*) Nmax               !max chain length
+       READ(9,*) Nmax               
 
-       READ(9,*) inc                !inclination
-       READ(9,*) per                !rotational period
-       READ(9,*) ld                !rotational period
-
+       READ(9,*) inc                
+       READ(9,*) per              
+       READ(9,*) fcz(1)
+       READ(9,*) fcz(2)
+       READ(9,*) fcz(3)
+       READ(9,*) ld              
        DO i=1,9
-       READ(9,*) nspots(i)             !number of spots
+       READ(9,*) nspots(i)            
        ENDDO
 
        DO j=1,9
-
        DO i=1,nspots(j)
-       READ(9,*) lon((j-1)*N+i)             !longitudes of spots (degrees)
+       READ(9,*) lon((j-1)*N+i)             
        ENDDO 
-
        DO i=1,nspots(j)
-       READ(9,*) lat((j-1)*N+i)             !latitudes of spot (degrees)
+       READ(9,*) lat((j-1)*N+i)            
        ENDDO 
-
        DO i=1,nspots(j)
-       READ(9,*) ss((j-1)*N+i)             !angular size of spot (degrees)
+       READ(9,*) ss((j-1)*N+i)            
        ENDDO 
-
        DO i=1,nspots(j)
-       READ(9,*) fc((j-1)*N+i)             !flux ratio Fspot/Fbackground
+       READ(9,*) fc((j-1)*N+i)             
        ENDDO 
-
        ENDDO
 
        CLOSE(9)
