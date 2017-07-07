@@ -1,0 +1,3 @@
+      INTEGER, PARAMETER :: obsmax=4000          !max number of entries of input spectrum 
+      INTEGER, PARAMETER :: ndata=obsmax        !max number of modeled spectra entries (ideally make it multiple of 360)
+      INTEGER, PARAMETER :: N=6                 !max allowed number of spots on the BD
