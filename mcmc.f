@@ -194,14 +194,14 @@ c-------------------------------------------------------------------------
 
        IF (test.eq.0) THEN 
 
-       call wrout(Nmax,outpt,in,test,ld,per,inc,nspots,lat,lon,ss,
+       call wrout(Nmax,outpt,in,test,ld,per,fcz,inc,nspots,lat,lon,ss,
      .            fc,xguess,chiout,update_test) 
 
        ENDIF
 
       IF (test.eq.1) THEN
 
-        call wrout(Nmax,outpt,in,test,ld_n,per_n,inc_n,nspots_n,lat_n,
+        call wrout(Nmax,outpt,in,test,ld_n,per_n,fcz_n,inc_n,nspots_n,lat_n,
      .            lon_n,ss_n,fc_n,xn,chiout,update_test)
 
          lon=lon_n
