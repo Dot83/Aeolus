@@ -1,7 +1,7 @@
 c Subroutine to create the target's light curve
 
 
-       subroutine BDsignal(cntrl,inc,ld, per,nspots,ilon,ilat,iss,ifc,     
+       subroutine BDsignal(cntrl,inc,ld, per,fcz,nspots,ilon,ilat,iss,ifc,     
      .                     Fmodout,tmodout)
 
 
@@ -38,9 +38,6 @@ c Subroutine to create the target's light curve
  
        
        el_par=1.
-       fcz(1)=1.8973826D-7
-       fcz(2)=1.1318570D-7
-       fcz(3)=0.343457D-7
        phs(1)=0.*degs
        phs(2)=0.*degs
        phs(3)=0.*degs
