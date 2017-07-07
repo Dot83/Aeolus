@@ -1,11 +1,7 @@
-c MCMC chain for mapping of the observed BD
 
        PROGRAM MCMC
 c-------------------------------------------------------------------------
-c MCMC for mapping of the observed Brown Dwarf signal. We initially start 
-c with a simplified version where we just look for the patterns on the planet
-c and their intensities and then we go into trying to get more details (eg 
-c spot orientation, size etc) and then the RT info
+c MCMC for mapping of the observed Brown Dwarf signal. 
 c-------------------------------------------------------------------------
 
        IMPLICIT NONE
@@ -25,6 +21,7 @@ c-------------------------------------------------------------------------
        REAL(8), DIMENSION(ndata) :: xguess,xn,xo,
      .                  tguess,tn
 
+       REAL(8), DIMENSION(3) :: fcz,fcz_n
        DOUBLE PRECISION inc,per,per_n,inc_n,chiout,
      .       ld,ld_n                    !,Irotsym,Crotsym
 
@@ -35,9 +32,6 @@ c-------------------------------------------------------------------------
 
  
 c------------------------------------------------------------------------
-c there should be multiple runs of chains starting from various points etc 
-c in order to get the statistics in our MCMC -- inclination and # of spots 
-c is what I need to play with since it is not taken as a var in the mcmc
 c-------------------------------------------------------------------------
 
 !initialize arrays!
@@ -73,13 +67,8 @@ c-------------------------------------------------------------------------
        b5=0.
 
 
-c Initialize the step count
-
        in=1 
 !       in=4582209
-
- 
-c Start up the chain with a random guess of the parameters
 
        call rdparam(fmeas,Nmax,inc,per,ld,nspots,lon,lat,ss,fc,
      .                    outpt)!Irotsym,Crotsym)
@@ -88,14 +77,6 @@ c Start up the chain with a random guess of the parameters
 !        fmeas='2m1324_v54.dat'
 
 !       print*,'mcmc:',lat(1),fc(1)
-
-c Open convergence control output file
-!       OPEN(unit=cun,file='conv_'//trim(outpt)//'.dat',
-!     .      err=994) 
-!       WRITE(cun,505)
-!       CLOSE(cun)
-
-c Get input spectrum and its observational error and phase info
 
        call rdinput(fmeas,xin,sigmain,tin)
 
@@ -108,18 +89,9 @@ c Get input spectrum and its observational error and phase info
        ict=count(tin.gt.0)
 
 
-
-c Generate the BD signal
-
-       call BDsignal(cntrl,inc,tin,ld,per,nspots,lon,lat,ss,fc,  !Irotsym,Crotsym, 
+       call BDsignal(cntrl,inc,tin,ld,per,fcz,nspots,lon,lat,ss,fc,  !Irotsym,Crotsym, 
      .                     xguess,tguess)
 
-
-!       DO in=1,200
-!       print*,tguess(in),xguess(in)
-!       ENDDO
-
-!      stop
 
  500  continue     
       
@@ -127,9 +99,9 @@ c Generate the BD signal
 
         print*,'in:',in
 
-c Generate a trial state according to q(xn|xguess)
         per_n=per
         inc_n=inc
+        fcz_n=fcz
         nspots_n=nspots
         lat_n=lat
         lon_n=lon
@@ -137,28 +109,20 @@ c Generate a trial state according to q(xn|xguess)
         fc_n=fc
         ld_n=ld
 
-       call gmh_on(xguess,per_n,inc_n,ld_n,nspots_n,tin,lat_n,     !Irotsym,Crotsym,
+       call gmh_on(xguess,per_n,fcz_n,inc_n,ld_n,nspots_n,tin,lat_n,     !Irotsym,Crotsym,
      .                lon_n,ss_n,fc_n,xn,tn,update_test)
 
 
 !       print*,xguess
 !       stop
 
-c Draw a random number u from a uniform distribution (0.le.i.le.1)
-
        call randnum(u)
-
-
-c Control if the new state is accepted or we go to the old one 
 
        call control(xin,tin,sigmain,xguess,tguess,xn,tn,u,
      .              test,chiout)
 
 
 !---------------------------------------------------
-c Discard the first 10% of the chain and keep info for the rest only
-
-c IF updates happen during the first 10% they need be saved....
       IF (in.lt.int(nmax*0.1)) THEN 
         IF (test.eq.1) THEN
          lon=lon_n
@@ -182,27 +146,6 @@ c IF updates happen during the first 10% they need be saved....
 !      IF (in.ge.100) THEN 
       IF (in.ge.int(nmax*0.1)) THEN 
 
-c Control the acceptance rate 
-
-!      IF (update_test.eq.1) THEN
-!        IF (test.eq.1) a1=a1+1.
-!        IF (test.eq.0) b1=b1+1.
-!      ENDIF
-!      IF ((update_test.eq.2).or.(update_test.eq.5).or.
-!     .   (update_test.eq.8).or.(update_test.eq.11)) THEN
-!        IF (test.eq.1) a2=a2+1.
-!        IF (test.eq.0) b2=b2+1.
-!      ENDIF
-!      IF ((update_test.eq.3).or.(update_test.eq.6).or.
-!     .   (update_test.eq.9).or.(update_test.eq.12)) THEN
-!        IF (test.eq.1) a3=a3+1.
-!        IF (test.eq.0) b3=b3+1.
-!      ENDIF
-!      IF ((update_test.eq.4).or.(update_test.eq.7).or.
-!     .   (update_test.eq.10).or.(update_test.eq.13)) THEN
-!        IF (test.eq.1) a4=a4+1.
-!        IF (test.eq.0) b4=b4+1.
-!      ENDIF
 
 
 !      IF (mod(in,2000).eq.0) THEN
@@ -247,7 +190,7 @@ c Control the acceptance rate
 
 !       print*,test,inc,nspots,lon(1),lat(1)
       
-c Write current state parameters to output file 
+
 
        IF (test.eq.0) THEN 
 
@@ -277,8 +220,6 @@ c Write current state parameters to output file
 
 !---------------------------------------------------
 
-c Move to n=n+1 and repeat chain
-c When we reach the max number of chain repetitions write output
 
        IF (in.le.Nmax) THEN 
          in=in+1
@@ -290,10 +231,6 @@ c When we reach the max number of chain repetitions write output
 
        ENDIF 
       
-c Now that we have converged the first parameters add the # of spots, shape
-c and (BD) inclination to refine the model
-
-
 
        RETURN
 
