@@ -70,7 +70,7 @@ c-------------------------------------------------------------------------
        in=1 
 !       in=4582209
 
-       call rdparam(fmeas,Nmax,inc,per,ld,nspots,lon,lat,ss,fc,
+       call rdparam(fmeas,Nmax,inc,per,fcz,ld,nspots,lon,lat,ss,fc,
      .                    outpt)!Irotsym,Crotsym)
 
 
