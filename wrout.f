@@ -1,13 +1,13 @@
 c subroutine for writting out MCMC fit models
 
-      SUBROUTINE wrout(nmax,outpt,in,test,ld,per,inc,nspots,sp_lat,
+      SUBROUTINE wrout(nmax,outpt,in,test,ld,per,fcz,inc,nspots,sp_lat,
      .           sp_lon,sp_ss,sp_fc,xguess,chiout,update_test)
 
       IMPLICIT NONE
       INCLUDE 'const_incl'
 
       INTEGER test,in,nspots(9),j,nmax,cntrl,update_test
-
+      REAL(8), DIMENSION(3) :: fcz
       INTEGER, PARAMETER :: iun=4,jun=5
       DOUBLE PRECISION chiout,ld
       REAL(8), DIMENSION(N*9) :: sp_lon,sp_lat,sp_ss,sp_fc
@@ -47,7 +47,8 @@ c open standard output file
 
        DO j=1,9
 
-         WRITE(iun,404) in,update_test,test,ld,inc,per,nspots(j),
+         WRITE(iun,404) in,update_test,test,ld,inc,per,fcz(1), 
+     .     fcz(2),fcz(3),nspots(j),
      .     sp_lon((j-1)*N+1),sp_lon((j-1)*N+2),sp_lon(j-1)*N+(3),
      .     sp_lon((j-1)*N+4),sp_lon((j-1)*N+5),sp_lon((j-1)*N+6),
      .     sp_lat((j-1)*N+1),sp_lat((j-1)*N+2),sp_lat(j-1)*N+(3),
@@ -89,7 +90,8 @@ c open standard output file
 ! 403  FORMAT(I7.7,2x,I1.1,2x,F8.3,2x,F8.3,2x,I3.3,2x,F8.3,2x,F8.3,2x,
 !     .      F8.3,2x,F8.3,2x,F8.3,2x,F8.3,2x,F8.2,2x,F8.2,2x,F8.2,2x,
 !     .      F8.2,2x,F8.2,2x,F8.2,2x,E16.8)
- 404  FORMAT(I9.9,2x,I3.3,2x,I1.1,2x,F8.3,2x,f8.3,2x,F8.3,2x,I3.3,2x,
+ 404  FORMAT(I9.9,2x,I3.3,2x,I1.1,2x,F8.3,2x,f8.3,2x,F8.3,2x,F8.3,2x,
+     .  F8.3,2x,F8.3,2x,I3.3,2x,
      .  F8.3,2x,F8.3,2x,F8.3,2x,F8.3,2x,F8.3,2x,F8.3,2x,F8.3,2x,F8.3,2x,
      .  F8.3,2x,F8.3,2x,F8.3,2x,F8.3,2x,F8.3,2x,F8.3,2x,F8.3,2x,
      .  F8.3,2x,F8.3,2x,F8.3,2x,F8.3,2x,F8.3,2x,F8.3,2x,F8.3,2x,
